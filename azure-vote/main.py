@@ -32,14 +32,14 @@ config_integration.trace_integrations(["requests"])
 # Logging
 logger = logging.getLogger(__name__)
 handler = AzureLogHandler(
-    connection_string="InstrumentationKey=72e8156e-e9d8-4133-b964-c6087b1726e1"
+    connection_string="InstrumentationKey=20d27646-78bc-45a8-9665-1a17acbc0dba"
 )
 handler.setFormatter(logging.Formatter("%(traceId)s %(spanId)s %(message)s"))
 logger.addHandler(handler)
 # Logging custom Events
 logger.addHandler(
     AzureEventHandler(
-        connection_string="InstrumentationKey=72e8156e-e9d8-4133-b964-c6087b1726e1"
+        connection_string="InstrumentationKey=20d27646-78bc-45a8-9665-1a17acbc0dba"
     )
 )
 # Set the logging level
@@ -48,14 +48,14 @@ logger.setLevel(logging.INFO)
 # Metrics
 exporter = metrics_exporter.new_metrics_exporter(
     enable_standard_metrics=True,
-    connection_string="InstrumentationKey=72e8156e-e9d8-4133-b964-c6087b1726e1",
+    connection_string="InstrumentationKey=20d27646-78bc-45a8-9665-1a17acbc0dba",
 )
 view_manager.register_exporter(exporter)
 
 # Tracing
 tracer = Tracer(
     exporter=AzureExporter(
-        connection_string="InstrumentationKey=72e8156e-e9d8-4133-b964-c6087b1726e1"
+        connection_string="InstrumentationKey=20d27646-78bc-45a8-9665-1a17acbc0dba"
     ),
     sampler=ProbabilitySampler(1.0),
 )
@@ -66,7 +66,7 @@ app = Flask(__name__)
 middleware = FlaskMiddleware(
     app,
     exporter=AzureExporter(
-        connection_string="InstrumentationKey=72e8156e-e9d8-4133-b964-c6087b1726e1"
+        connection_string="InstrumentationKey=20d27646-78bc-45a8-9665-1a17acbc0dba"
     ),
     sampler=ProbabilitySampler(rate=1.0),
 )
@@ -198,7 +198,7 @@ def index():
 
 if __name__ == "__main__":
     # comment line below when deploying to VMSS
-    app.run()  # local
+    # app.run()  # local
     # uncomment the line below before deployment to VMSS
-    # app.run(host="0.0.0.0", threaded=True, debug=True)  # remote
+    app.run(host="0.0.0.0", threaded=True, debug=True)  # remote
     # app.run(host='0.0.0.0', threaded=True, debug=True, port=5000) # remote
