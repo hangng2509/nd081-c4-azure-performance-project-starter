@@ -17,6 +17,41 @@ probeName="tcpProbe"
 vmSize="Standard_B1s"
 storageType="Standard_LRS"
 
+# Export variables
+export resourceGroup
+export location
+export osType
+export vmssName
+export adminName
+export storageAccount
+export bePoolName
+export lbName
+export lbRule
+export nsgName
+export vnetName
+export subnetName
+export probeName
+export vmSize
+export storageType
+
+# Print exported variables
+echo "Exported variables:"
+echo "resourceGroup: $resourceGroup"
+echo "location: $location"
+echo "osType: $osType"
+echo "vmssName: $vmssName"
+echo "adminName: $adminName"
+echo "storageAccount: $storageAccount"
+echo "bePoolName: $bePoolName"
+echo "lbName: $lbName"
+echo "lbRule: $lbRule"
+echo "nsgName: $nsgName"
+echo "vnetName: $vnetName"
+echo "subnetName: $subnetName"
+echo "probeName: $probeName"
+echo "vmSize: $vmSize"
+echo "storageType: $storageType"
+
 # Create resource group. 
 # This command will not work for the Cloud Lab users. 
 # Cloud Lab users can comment this command and 
@@ -54,23 +89,7 @@ echo "Network security group created: $nsgName"
 # Create VM Scale Set
 echo "STEP 3 - Creating VM scale set $vmssName"
 
-az vmss create \
-  --resource-group $resourceGroup \
-  --name $vmssName \
-  --image $osType \
-  --vm-sku $vmSize \
-  --nsg $nsgName \
-  --subnet $subnetName \
-  --vnet-name $vnetName \
-  --backend-pool-name $bePoolName \
-  --storage-sku $storageType \
-  --load-balancer $lbName \
-  --custom-data cloud-init.txt \
-  --upgrade-policy-mode automatic \
-  --admin-username $adminName \
-  --generate-ssh-keys \
-  --verbose 
-
+az vmss create --resource-group "lab4-rg" --name "udacity-vmss" --image "Ubuntu2204" --admin-username "udacityadmin" --ssh-key-values "$(cat ~/.ssh/id_rsa.pub)" --vm-sku "Standard_B1s" --nsg "udacity-vmss-nsg" --subnet "udacity-vmss-vnet-subnet" --vnet-name "udacity-vmss-vnet" --backend-pool-name "udacity-vmss-bepool" --storage-sku "Standard_LRS" --load-balancer "udacity-vmss-lb" --custom-data cloud-init.txt --upgrade-policy-mode automatic --verbose
 echo "VM scale set created: $vmssName"
 
 # Associate NSG with VMSS subnet
