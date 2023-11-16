@@ -80,8 +80,8 @@ echo "Storage account created: $storageAccount"
 echo "STEP 2 - Creating network security group $nsgName"
 
 az network nsg create \
---resource-group $resourceGroup \
---name $nsgName \
+--resource-group "lab4-rg" \
+--name "$vmssName-nsg" \
 --verbose
 
 echo "Network security group created: $nsgName"
@@ -89,14 +89,14 @@ echo "Network security group created: $nsgName"
 # Create VM Scale Set
 echo "STEP 3 - Creating VM scale set $vmssName"
 
-az vmss create --resource-group "lab4-rg" --name "udacity-vmss" --image "Ubuntu2204" --admin-username "udacityadmin" --ssh-key-values "$(cat ~/.ssh/id_rsa.pub)" --vm-sku "Standard_B1s" --nsg "udacity-vmss-nsg" --subnet "udacity-vmss-vnet-subnet" --vnet-name "udacity-vmss-vnet" --backend-pool-name "udacity-vmss-bepool" --storage-sku "Standard_LRS" --load-balancer "udacity-vmss-lb" --custom-data cloud-init.txt --upgrade-policy-mode automatic --verbose
+az vmss create --resource-group "lab4-rg" --name "udacity-vmss" --orchestration-mode flexible --image "Ubuntu2204" --admin-username "udacityadmin" --generate-ssh-keys --vm-sku "Standard_B1s" --nsg "udacity-vmss-nsg" --subnet "udacity-vmss-vnet-subnet" --vnet-name "udacity-vmss-vnet" --backend-pool-name "udacity-vmss-bepool" --storage-sku "Standard_LRS" --load-balancer "udacity-vmss-lb" --custom-data cloud-init.txt --upgrade-policy-mode automatic --verbose
 echo "VM scale set created: $vmssName"
 
 # Associate NSG with VMSS subnet
 echo "STEP 4 - Associating NSG: $nsgName with subnet: $subnetName"
 
 az network vnet subnet update \
---resource-group $resourceGroup \
+--resource-group "lab4-rg" \
 --name $subnetName \
 --vnet-name $vnetName \
 --network-security-group $nsgName \
